@@ -5,6 +5,6 @@ import { AccessStrategy, RefreshStrategy } from './strategies';
 
 @Module({
   controllers: [AuthController],
-  providers: [AuthService, AccessStrategy, RefreshStrategy],
+  providers: [AuthService],
 })
 export class AuthModule {}

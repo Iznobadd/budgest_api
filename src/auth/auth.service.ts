@@ -6,9 +6,9 @@ import {
 import { PrismaService } from 'src/prisma/prisma.service';
 import { AuthDto } from './dto';
 import * as bcrypt from 'bcrypt';
-import { Tokens } from './types';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
+import { Response } from 'express';
 
 @Injectable()
 export class AuthService {
@@ -17,7 +17,10 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async register(dto: AuthDto): Promise<Tokens> {
+  async register(
+    dto: AuthDto,
+    res: Response,
+  ): Promise<{ access_token: string }> {
     const userExists = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
@@ -36,11 +39,10 @@ export class AuthService {
       },
     });
 
-    const tokens = await this.generateUserTokens(newUser.id);
-    return tokens;
+    return this.generateUserTokens(newUser.id, res);
   }
 
-  async login(dto: AuthDto): Promise<Tokens> {
+  async login(dto: AuthDto, res: Response): Promise<{ access_token: string }> {
     const user = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
@@ -52,12 +54,12 @@ export class AuthService {
     const passwordMatches = await bcrypt.compare(dto.password, user.password);
     if (!passwordMatches) throw new UnauthorizedException('Wrong credentials');
 
-    return this.generateUserTokens(user.id);
+    return this.generateUserTokens(user.id, res);
   }
 
   logout() {}
 
-  async refreshTokens(refreshToken: string) {
+  async refreshTokens(refreshToken: string, res: Response) {
     const token = await this.prisma.refreshToken.findFirst({
       where: {
         token: refreshToken,
@@ -75,14 +77,17 @@ export class AuthService {
       },
     });
 
-    return this.generateUserTokens(token.userId);
+    return this.generateUserTokens(token.userId, res);
   }
 
   hashData(data: string) {
     return bcrypt.hash(data, 10);
   }
 
-  async generateUserTokens(userId: string): Promise<Tokens> {
+  async generateUserTokens(
+    userId: string,
+    res: Response,
+  ): Promise<{ access_token: string }> {
     const access_token = this.jwtService.sign(
       {
         sub: userId,
@@ -93,11 +98,17 @@ export class AuthService {
     );
 
     const refresh_token = uuidv4();
-
     await this.storeRefreshToken(refresh_token, userId);
+
+    res.cookie('refresh_token', refresh_token, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'strict',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
     return {
       access_token,
-      refresh_token,
     };
   }
 

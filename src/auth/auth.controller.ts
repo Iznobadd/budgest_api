@@ -1,20 +1,29 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Post,
+  Req,
+  Res,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthDto, RefreshTokenDto } from './dto';
-import { Tokens } from './types';
+import { AuthDto } from './dto';
+import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
 
   @Post('/register')
-  register(@Body() authDto: AuthDto): Promise<Tokens> {
-    return this.authService.register(authDto);
+  async register(@Body() authDto: AuthDto, @Res() res: Response) {
+    const tokens = await this.authService.register(authDto, res);
+    return res.json(tokens);
   }
 
   @Post('/login')
-  login(@Body() authDto: AuthDto): Promise<Tokens> {
-    return this.authService.login(authDto);
+  async login(@Body() authDto: AuthDto, @Res() res: Response) {
+    const tokens = await this.authService.login(authDto, res);
+    return res.json(tokens);
   }
 
   @Post('/logout')
@@ -23,7 +32,13 @@ export class AuthController {
   }
 
   @Post('/refresh')
-  refreshTokens(@Body() refreshTokenDto: RefreshTokenDto) {
-    return this.authService.refreshTokens(refreshTokenDto.refresh_token);
+  async refreshTokens(@Req() req: Request, @Res() res: Response) {
+    const refreshToken = req.cookies['refresh_token'];
+
+    if (!refreshToken)
+      throw new UnauthorizedException('No refresh token found');
+
+    const tokens = await this.authService.refreshTokens(refreshToken, res);
+    return res.json(tokens);
   }
 }
