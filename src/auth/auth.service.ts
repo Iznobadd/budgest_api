@@ -104,11 +104,19 @@ export class AuthService {
   async storeRefreshToken(token: string, userId: string) {
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 7);
-    await this.prisma.refreshToken.create({
-      data: {
-        token,
+
+    await this.prisma.refreshToken.upsert({
+      where: {
         userId,
+      },
+      update: {
         expiryDate,
+        token,
+      },
+      create: {
+        token,
+        expiryDate,
+        userId,
       },
     });
   }
