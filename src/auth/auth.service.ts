@@ -99,13 +99,17 @@ export class AuthService {
 
     const refresh_token = uuidv4();
     await this.storeRefreshToken(refresh_token, userId);
-
-    res.cookie('refresh_token', refresh_token, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    try {
+      res.cookie('refresh_token', refresh_token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: 'lax',
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        path: '/',
+      });
+    } catch (err) {
+      console.log('error sending cookie');
+    }
 
     return {
       access_token,

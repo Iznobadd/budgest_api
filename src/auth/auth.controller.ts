@@ -12,7 +12,7 @@ import { Request, Response } from 'express';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Post('/register')
   async register(@Body() authDto: AuthDto, @Res() res: Response) {
@@ -35,10 +35,16 @@ export class AuthController {
   async refreshTokens(@Req() req: Request, @Res() res: Response) {
     const refreshToken = req.cookies['refresh_token'];
 
-    if (!refreshToken)
+    if (!refreshToken) {
       throw new UnauthorizedException('No refresh token found');
+    }
 
-    const tokens = await this.authService.refreshTokens(refreshToken, res);
-    return res.json(tokens);
+    try {
+      const tokens = await this.authService.refreshTokens(refreshToken, res);
+      return res.json(tokens);
+    } catch (error) {
+      console.error('Error refreshing tokens:', error);
+      return res.status(401).json({ message: 'Failed to refresh tokens' });
+    }
   }
 }
