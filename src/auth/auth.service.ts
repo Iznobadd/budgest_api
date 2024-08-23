@@ -39,6 +39,13 @@ export class AuthService {
       },
     });
 
+    await this.prisma.account.create({
+      data: {
+        userId: newUser.id,
+        name: 'Default',
+      },
+    });
+
     return this.generateUserTokens(newUser.id, res);
   }
 
