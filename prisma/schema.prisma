@@ -21,6 +21,7 @@ model User {
     email        String         @unique
     password     String
     RefreshToken RefreshToken[]
+    Account      Account[]
 
     @@map("users")
 }
@@ -35,4 +36,14 @@ model RefreshToken {
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@map("refresh_tokens")
+}
+
+model Account {
+    id     String @id @default(uuid())
+    userId String
+    name   String
+
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("accounts")
 }
