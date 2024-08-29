@@ -1,11 +1,11 @@
 meta {
   name: Create
   type: http
-  seq: 2
+  seq: 1
 }
 
 post {
-  url: http://localhost:4000/categories/
+  url: http://localhost:4000/transactions/
   body: json
   auth: bearer
 }
@@ -16,6 +16,10 @@ auth:bearer {
 
 body:json {
   {
-    "name": "Test2"
+    "accountId": "10ec83ae-28a1-48b0-b0ea-c2d2ca5284ec",
+    "categoryId": "6a8e6564-de58-4155-a548-d646cbf3e7ab",
+    "amount": "150.50",
+    "description": "Test desc",
+    "dateTransaction": "2024-08-20"
   }
 }

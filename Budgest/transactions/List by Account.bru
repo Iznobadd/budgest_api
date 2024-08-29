@@ -1,21 +1,15 @@
 meta {
-  name: Create
+  name: List by Account
   type: http
-  seq: 2
+  seq: 3
 }
 
-post {
-  url: http://localhost:4000/categories/
-  body: json
+get {
+  url: http://localhost:4000/transactions/10ec83ae-28a1-48b0-b0ea-c2d2ca5284ec
+  body: none
   auth: bearer
 }
 
 auth:bearer {
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNzk5YmM4ZS02ZjM4LTQ1MGYtYjFjMy1jMTljM2VmNWZiNWIiLCJpYXQiOjE3MjQ5Mjk3MTQsImV4cCI6MTcyNDkzMzMxNH0.7dNZxGbwr8UGDH30zjZRBGBdfBwsQfin2JpILKVWBCY
-}
-
-body:json {
-  {
-    "name": "Test2"
-  }
 }
