@@ -5,56 +5,75 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "postgresql"
-    url      = env("DATABASE_URL")
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 model User {
-    id        String   @id @default(uuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-    email        String         @unique
-    password     String
-    RefreshToken RefreshToken[]
-    Account      Account[]
-    Category Category[]
-    
-    @@map("users")
+  email        String         @unique
+  password     String
+  RefreshToken RefreshToken[]
+  Account      Account[]
+  Category     Category[]
+
+  @@map("users")
 }
 
 model RefreshToken {
-    id     String @id @default(uuid())
-    token  String @unique
-    userId String @unique
+  id     String @id @default(uuid())
+  token  String @unique
+  userId String @unique
 
-    expiryDate DateTime
+  expiryDate DateTime
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-    @@map("refresh_tokens")
+  @@map("refresh_tokens")
 }
 
 model Account {
-    id     String @id @default(uuid())
-    userId String
-    name   String
+  id     String @id @default(uuid())
+  userId String
+  name   String
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Transaction Transaction[]
 
-    @@map("accounts")
+  @@map("accounts")
 }
 
 model Category {
-    id String @id @default(uuid())
-    userId String
-    name String
+  id     String @id @default(uuid())
+  userId String
+  name   String
 
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  Transaction Transaction[]
 
-    @@map("categories")
+  @@map("categories")
+}
+
+model Transaction {
+  id         String @id @default(uuid())
+  accountId  String
+  categoryId String
+
+  amount      Decimal
+  description String?
+
+  date_transaction DateTime
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  account  Account  @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
 }
