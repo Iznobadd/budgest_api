@@ -1,15 +1,21 @@
 meta {
-  name: List
+  name: Delete
   type: http
-  seq: 1
+  seq: 3
 }
 
-get {
-  url: http://localhost:4000/categories/
-  body: none
+delete {
+  url: http://localhost:4000/categories/efb3a158-64f8-4a45-a30a-b95c0734c069
+  body: json
   auth: bearer
 }
 
 auth:bearer {
   token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwZjgxOTRlNC05MWZjLTQ0OGEtODYyOC04MDM4N2VmNTVhNTIiLCJpYXQiOjE3MjQ5MjE3MTEsImV4cCI6MTcyNDkyNTMxMX0.vmcXEjt94SGKwamROU4y1ik2UTR_0N3EJBnOsvV36uw
+}
+
+body:json {
+  {
+    "name": "Test2"
+  }
 }
