@@ -23,19 +23,29 @@ export class CategoriesService {
     }
   }
 
-  findAll() {
-    return `This action returns all categories`;
+  async findAll(userId: string) {
+    try {
+      const findAll = await this.prisma.category.findMany({
+        where: {
+          userId,
+        },
+      });
+      return findAll;
+    } catch (err) {
+      throw new InternalServerErrorException('Internal server Error');
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} category`;
-  }
-
-  update(id: number, updateCategoryDto: UpdateCategoryDto) {
-    return `This action updates a #${id} category`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} category`;
+  async remove(id: string) {
+    try {
+      const remove = await this.prisma.category.delete({
+        where: {
+          id,
+        },
+      });
+      return remove;
+    } catch (err) {
+      throw new InternalServerErrorException('Internal server Error');
+    }
   }
 }
