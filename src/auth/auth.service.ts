@@ -43,6 +43,7 @@ export class AuthService {
       data: {
         userId: newUser.id,
         name: 'Default',
+        budget: '1000.00',
       },
     });
 

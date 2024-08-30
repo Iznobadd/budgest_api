@@ -8,17 +8,18 @@ export class AccountsService {
   constructor(private prisma: PrismaService) {}
 
   async create(createAccountDto: CreateAccountDto, userId: string) {
-    try {
-      const create = await this.prisma.account.create({
-        data: {
-          userId,
-          name: createAccountDto.name,
-        },
-      });
-      return create;
-    } catch (err) {
-      throw new InternalServerErrorException('Internal server Error');
-    }
+    const budget = parseFloat(createAccountDto.budget);
+
+    if (isNaN(budget)) throw new Error('Invalid budget');
+
+    const create = await this.prisma.account.create({
+      data: {
+        userId,
+        name: createAccountDto.name,
+        budget,
+      },
+    });
+    return create;
   }
 
   async findAll(userId: string) {
