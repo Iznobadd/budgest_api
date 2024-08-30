@@ -1,0 +1,21 @@
+meta {
+  name: Create
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:4000/accounts/
+  body: json
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxNzk5YmM4ZS02ZjM4LTQ1MGYtYjFjMy1jMTljM2VmNWZiNWIiLCJpYXQiOjE3MjUwMDE3OTUsImV4cCI6MTcyNTAwNTM5NX0.lxV8hsjJoNOBcRDr7Z5smaa2AO5ZsvErdKD4i8tdBJ0
+}
+
+body:json {
+  {
+   "name": "Test 5"
+  }
+}

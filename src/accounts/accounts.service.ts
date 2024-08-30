@@ -7,13 +7,23 @@ import { PrismaService } from 'src/prisma/prisma.service';
 export class AccountsService {
   constructor(private prisma: PrismaService) {}
 
-  create(createAccountDto: CreateAccountDto) {
-    return 'This action adds a new account';
+  async create(createAccountDto: CreateAccountDto, userId: string) {
+    try {
+      const create = await this.prisma.account.create({
+        data: {
+          userId,
+          name: createAccountDto.name,
+        },
+      });
+      return create;
+    } catch (err) {
+      throw new InternalServerErrorException('Internal server Error');
+    }
   }
 
   async findAll(userId: string) {
     try {
-      const findAll = await this.prisma.category.findMany({
+      const findAll = await this.prisma.account.findMany({
         where: {
           userId,
         },
