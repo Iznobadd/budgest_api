@@ -4,7 +4,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { AuthDto } from './dto';
+import { LoginDto, RegisterDto } from './dto';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { v4 as uuidv4 } from 'uuid';
@@ -18,7 +18,7 @@ export class AuthService {
   ) {}
 
   async register(
-    dto: AuthDto,
+    dto: RegisterDto,
     res: Response,
   ): Promise<{ access_token: string }> {
     const amount = parseFloat(dto.amount);
@@ -55,7 +55,7 @@ export class AuthService {
     return this.generateUserTokens(newUser.id, res);
   }
 
-  async login(dto: AuthDto, res: Response): Promise<{ access_token: string }> {
+  async login(dto: LoginDto, res: Response): Promise<{ access_token: string }> {
     const user = await this.prisma.user.findUnique({
       where: {
         email: dto.email,

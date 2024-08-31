@@ -7,7 +7,7 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import { AuthDto } from './dto';
+import { LoginDto, RegisterDto } from './dto';
 import { Request, Response } from 'express';
 
 @Controller('auth')
@@ -15,14 +15,14 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('/register')
-  async register(@Body() authDto: AuthDto, @Res() res: Response) {
-    const tokens = await this.authService.register(authDto, res);
+  async register(@Body() registerDto: RegisterDto, @Res() res: Response) {
+    const tokens = await this.authService.register(registerDto, res);
     return res.json(tokens);
   }
 
   @Post('/login')
-  async login(@Body() authDto: AuthDto, @Res() res: Response) {
-    const tokens = await this.authService.login(authDto, res);
+  async login(@Body() LoginDto: LoginDto, @Res() res: Response) {
+    const tokens = await this.authService.login(LoginDto, res);
     return res.json(tokens);
   }
 
