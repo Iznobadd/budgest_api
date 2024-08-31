@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+import { IsDecimal, IsEmail, IsNotEmpty, IsString } from 'class-validator';
 
 export class AuthDto {
   @IsNotEmpty()
@@ -8,4 +8,8 @@ export class AuthDto {
   @IsNotEmpty()
   @IsString()
   password: string;
+
+  @IsNotEmpty()
+  @IsDecimal({}, { message: 'amount must be a decimal number' })
+  amount: string;
 }

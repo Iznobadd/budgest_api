@@ -21,6 +21,12 @@ export class AuthService {
     dto: AuthDto,
     res: Response,
   ): Promise<{ access_token: string }> {
+    const amount = parseFloat(dto.amount);
+
+    if (isNaN(amount)) {
+      throw new Error('Invalid amount');
+    }
+
     const userExists = await this.prisma.user.findUnique({
       where: {
         email: dto.email,
@@ -42,7 +48,7 @@ export class AuthService {
     await this.prisma.budget.create({
       data: {
         userId: newUser.id,
-        amount: '1000.00',
+        amount,
       },
     });
 
