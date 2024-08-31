@@ -39,11 +39,10 @@ export class AuthService {
       },
     });
 
-    await this.prisma.account.create({
+    await this.prisma.budget.create({
       data: {
         userId: newUser.id,
-        name: 'Default',
-        budget: '1000.00',
+        amount: '1000.00',
       },
     });
 

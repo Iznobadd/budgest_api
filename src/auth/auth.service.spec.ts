@@ -66,7 +66,7 @@ describe('AuthService', () => {
       prismaService.user.create = jest
         .fn()
         .mockResolvedValue({ id: 'userId', email: 'test@example.com' });
-      prismaService.account.create = jest.fn().mockResolvedValue(null);
+      prismaService.budget.create = jest.fn().mockResolvedValue(null);
       const response = { cookie: jest.fn() } as unknown as Response;
 
       const dto: AuthDto = { email: 'test@example.com', password: 'password' };

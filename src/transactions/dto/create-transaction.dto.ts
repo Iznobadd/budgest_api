@@ -11,7 +11,7 @@ import {
 export class CreateTransactionDto {
   @IsNotEmpty()
   @IsUUID()
-  accountId: string;
+  budgetId: string;
 
   @IsNotEmpty()
   @IsUUID()

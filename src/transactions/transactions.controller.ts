@@ -20,8 +20,8 @@ export class TransactionsController {
     return this.transactionsService.findAll(user.sub);
   }
 
-  @Get(':account')
-  findOne(@Param('account') accountId: string, @GetUser() user: UserPayload) {
-    return this.transactionsService.findByAccount(accountId, user.sub);
+  @Get(':budget')
+  findOne(@Param('budget') budgetId: string, @GetUser() user: UserPayload) {
+    return this.transactionsService.findByBudget(budgetId, user.sub);
   }
 }

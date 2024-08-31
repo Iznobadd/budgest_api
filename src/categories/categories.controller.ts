@@ -3,19 +3,14 @@ import {
   Get,
   Post,
   Body,
-  Patch,
   Param,
   Delete,
   UseGuards,
-  Req,
 } from '@nestjs/common';
 import { CategoriesService } from './categories.service';
 import { CreateCategoryDto } from './dto/create-category.dto';
-import { UpdateCategoryDto } from './dto/update-category.dto';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
-import { Request } from 'express';
 import { GetUser } from 'src/decorators';
-import { User } from '@prisma/client';
 import { UserPayload } from 'src/types';
 
 @UseGuards(AuthGuard)

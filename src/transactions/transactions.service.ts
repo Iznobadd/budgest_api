@@ -19,13 +19,13 @@ export class TransactionsService {
       throw new Error('Invalid dateTransaction');
     }
 
-    const account = await this.prisma.account.findUnique({
+    const budget = await this.prisma.budget.findUnique({
       where: {
-        id: createTransactionDto.accountId,
+        id: createTransactionDto.budgetId,
       },
     });
 
-    if (!account) throw new NotFoundException('Account not found');
+    if (!budget) throw new NotFoundException('Budget not found');
 
     const category = await this.prisma.category.findUnique({
       where: {
@@ -37,7 +37,7 @@ export class TransactionsService {
 
     const newTransaction = await this.prisma.transaction.create({
       data: {
-        accountId: account.id,
+        budgetId: budget.id,
         categoryId: category.id,
         amount,
         description: createTransactionDto.description,
@@ -49,7 +49,7 @@ export class TransactionsService {
   }
 
   async findAll(userId: string) {
-    const accounts = await this.prisma.account.findMany({
+    const budgets = await this.prisma.budget.findMany({
       where: {
         userId,
       },
@@ -58,31 +58,31 @@ export class TransactionsService {
       },
     });
 
-    if (accounts.length === 0) throw new NotFoundException('Account not found');
+    if (budgets.length === 0) throw new NotFoundException('Account not found');
 
-    const accountIds = accounts.map((account) => account.id);
+    const budgetIds = budgets.map((budget) => budget.id);
 
     const transactions = await this.prisma.transaction.findMany({
       where: {
-        accountId: { in: accountIds },
+        budgetId: { in: budgetIds },
       },
     });
 
     return transactions;
   }
 
-  async findByAccount(accountId: string, userId: string) {
-    const account = await this.prisma.account.findUnique({
+  async findByBudget(budgetId: string, userId: string) {
+    const budget = await this.prisma.budget.findUnique({
       where: {
-        id: accountId,
+        id: budgetId,
       },
     });
 
-    if (!account) throw new NotFoundException('Account not found');
+    if (!budget) throw new NotFoundException('Budget not found');
 
     const transactions = await this.prisma.transaction.findMany({
       where: {
-        accountId,
+        budgetId,
       },
     });
 
