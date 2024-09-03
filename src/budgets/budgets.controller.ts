@@ -21,7 +21,7 @@ import { UserPayload } from 'src/types';
 export class BudgetsController {
   constructor(private readonly budgetsService: BudgetsService) {}
 
-  @Get(':budgetId')
+  @Get('/find/:budgetId')
   async find(
     @GetUser() user: UserPayload,
     @Param('budgetId') budgetId: string,
@@ -31,15 +31,9 @@ export class BudgetsController {
     return budget;
   }
 
-  @Get(':budgetId/remaining')
-  async remaining(
-    @GetUser() user: UserPayload,
-    @Param('budgetId') budgetId: string,
-  ) {
-    const remainingBudget = await this.budgetsService.remaining(
-      user.sub,
-      budgetId,
-    );
-    return { remainingBudget };
+  @Get('/remaining')
+  async remaining(@GetUser() user: UserPayload) {
+    const remainingBudget = await this.budgetsService.remaining(user.sub);
+    return remainingBudget;
   }
 }

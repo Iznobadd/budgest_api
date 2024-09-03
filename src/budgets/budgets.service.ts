@@ -23,10 +23,10 @@ export class BudgetsService {
 
     return budget;
   }
-  async remaining(userId: string, id: string) {
-    const budget = await this.prisma.budget.findUnique({
+  async remaining(userId: string) {
+    const budget = await this.prisma.budget.findFirst({
       where: {
-        id,
+        userId,
       },
       include: {
         Transaction: true,
@@ -56,6 +56,10 @@ export class BudgetsService {
 
     const remainingBudget = budget.amount.plus(totalIncome).minus(totalExpense);
 
-    return remainingBudget.toFixed(2);
+    return {
+      remainingBudget: remainingBudget.toFixed(2),
+      totalIncome: totalIncome.toFixed(2),
+      totalExpense: totalExpense.toFixed(2),
+    };
   }
 }
