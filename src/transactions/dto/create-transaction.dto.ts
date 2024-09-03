@@ -2,11 +2,13 @@ import {
   IsDate,
   IsDateString,
   IsDecimal,
+  IsEnum,
   IsNotEmpty,
   IsOptional,
   IsString,
   IsUUID,
 } from 'class-validator';
+import { Prisma, TransactionType } from '@prisma/client';
 
 export class CreateTransactionDto {
   @IsNotEmpty()
@@ -24,6 +26,12 @@ export class CreateTransactionDto {
   @IsOptional()
   @IsString()
   description?: string;
+
+  @IsNotEmpty()
+  @IsEnum(TransactionType, {
+    message: 'transactionType must be either INCOME or EXPENSE',
+  })
+  transactionType: TransactionType;
 
   @IsNotEmpty()
   @IsDateString({}, { message: 'dateTransaction must be a Date instance' })

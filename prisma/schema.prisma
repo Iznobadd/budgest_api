@@ -66,6 +66,7 @@ model Transaction {
 
     amount      Decimal
     description String?
+    transactionType TransactionType
 
     date_transaction DateTime
 
@@ -74,4 +75,9 @@ model Transaction {
 
     budget   Budget   @relation(fields: [budgetId], references: [id], onDelete: Cascade)
     category Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+}
+
+enum TransactionType {
+    INCOME
+    EXPENSE
 }

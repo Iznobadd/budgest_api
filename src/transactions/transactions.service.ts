@@ -41,6 +41,7 @@ export class TransactionsService {
         categoryId: category.id,
         amount,
         description: createTransactionDto.description,
+        transactionType: createTransactionDto.transactionType,
         date_transaction,
       },
     });
