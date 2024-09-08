@@ -89,4 +89,47 @@ export class TransactionsService {
 
     return transactions;
   }
+
+  async lastTransactions(userId) {
+    const budgets = await this.prisma.budget.findMany({
+      where: {
+        userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!budgets || budgets.length === 0)
+      throw new NotFoundException('Budgets not found');
+
+    const budgetIds = budgets.map((budget) => budget.id);
+
+    const transactions = await this.prisma.transaction.findMany({
+      where: {
+        budgetId: {
+          in: budgetIds,
+        },
+      },
+      take: 5,
+      orderBy: [
+        {
+          createdAt: 'desc',
+        },
+      ],
+      select: {
+        amount: true,
+        description: true,
+        transactionType: true,
+        createdAt: true,
+        category: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    return transactions;
+  }
 }

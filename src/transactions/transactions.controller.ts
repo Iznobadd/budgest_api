@@ -10,18 +10,23 @@ import { AuthGuard } from 'src/auth/guards/auth.guard';
 export class TransactionsController {
   constructor(private readonly transactionsService: TransactionsService) {}
 
-  @Post()
+  @Post('/create')
   create(@Body() createTransactionDto: CreateTransactionDto) {
     return this.transactionsService.create(createTransactionDto);
   }
 
-  @Get()
+  @Get('/all')
   findAll(@GetUser() user: UserPayload) {
     return this.transactionsService.findAll(user.sub);
   }
 
-  @Get(':budget')
+  @Get('/all/:budget')
   findOne(@Param('budget') budgetId: string, @GetUser() user: UserPayload) {
     return this.transactionsService.findByBudget(budgetId, user.sub);
+  }
+
+  @Get('/last')
+  last(@GetUser() user: UserPayload) {
+    return this.transactionsService.lastTransactions(user.sub);
   }
 }
